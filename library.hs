@@ -41,11 +41,12 @@ nombreFalopa = (=='i').last.nombre
 
 -- PUNTO 2
 -- 2.1
-engorde :: Number -> Animal -> Animal
+type Actividad=Animal->Animal
+engorde :: Number -> Actividad
 engorde kilos animal =animal{peso= peso animal + div (min 5 kilos) 2}
 
 -- 2.2
-revisacion::Animal->Animal
+revisacion::Actividad
 revisacion animal | estaEnfermo animal = engorde 2 (registroDeVisitaMedica 2 400 animal)
                   |otherwise           = animal
 
@@ -53,9 +54,14 @@ registroDeVisitaMedica :: Number -> Number -> Animal -> Animal
 registroDeVisitaMedica dias dinero animal=animal{veterinarios= Veterinario{ diaRecuperacion=dias,costo=dinero}:veterinarios animal}
 
 -- 2.3
-festejoCumple::Animal->Animal
+festejoCumple::Actividad
 festejoCumple animal= animal{edad=edad animal+1,peso=peso animal -1}
 
 -- 2.4
-chequeDePeso::Number->Animal->Animal
+chequeDePeso::Number->Actividad
 chequeDePeso xpeso animal =animal{estaEnfermo=  ((<= xpeso) . peso) animal }
+
+
+-- PUNTO 3
+proceso :: Animal -> [Actividad] -> Animal
+proceso = foldr ($)
